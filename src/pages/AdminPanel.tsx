@@ -105,8 +105,10 @@ const AdminPanel: React.FC = () => {
   const [bloodInventory, setBloodInventory] = useState<any[]>([]);
 
   useEffect(() => {
-    fetchBloodBankData();
-  }, []);
+    if (activeTab === 'blood') {
+      fetchBloodBankData();
+    }
+  }, [activeTab]);
 
   const fetchBloodBankData = async () => {
     try {
