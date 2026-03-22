@@ -27,7 +27,7 @@ const UserDashboard: React.FC = () => {
   const [medicines, setMedicines] = useState<any[]>([]);
   const [bloodRequests, setBloodRequests] = useState<any[]>([]);
 
-  const fetchData = async () => {
+  const fetchData = React.useCallback(async () => {
     if (user) {
       try {
         const [medicinesRes, ordersRes, requestsRes] = await Promise.all([
@@ -50,11 +50,11 @@ const UserDashboard: React.FC = () => {
         console.error("Error fetching data:", error);
       }
     }
-  };
+  }, [user]);
 
   useEffect(() => {
     fetchData();
-  }, [user]);
+  }, [fetchData]);
 
   const handleBookMedicine = async (medicine: any) => {
     if (!user) {
@@ -125,6 +125,10 @@ const UserDashboard: React.FC = () => {
                 <h3>Total Spent</h3>
                 <p className="stat-value">₹{orders.reduce((sum, o) => sum + Number(o.amount), 0).toFixed(2)}</p>
               </div>
+              <div className="stat-box clickable" onClick={() => setActiveTab('medicines')} style={{ cursor: 'pointer' }}>
+                <h3>Total Medicines</h3>
+                <p className="stat-value">{medicines.length}</p>
+              </div>
             </div>
             <div className="quick-actions">
               <h2>Quick Actions</h2>
@@ -133,7 +137,7 @@ const UserDashboard: React.FC = () => {
                   🛒 Book Medicines
                 </button>
                 <button className="action-btn" onClick={() => navigate('/blood-bank')}>
-                  🩸 Request Blood
+                  🩸 Blood Bank
                 </button>
                 <button className="action-btn" onClick={() => setActiveTab('orders')}>
                   📦 View Orders

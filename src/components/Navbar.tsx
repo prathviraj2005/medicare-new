@@ -24,9 +24,11 @@ const Navbar: React.FC = () => {
 
         <ul className={`nav-links ${isMenuOpen ? 'active' : ''}`}>
           <li><Link to="/">Home</Link></li>
+          <li><Link to="/catalog">Medicines</Link></li>
+          <li><Link to="/blood-bank">Blood Bank</Link></li>
           {isAuthenticated ? (
             <>
-              <li><Link to={user?.role === 'admin' ? '/admin' : '/user-dashboard'} className="nav-link">Dashboard</Link></li>
+              <li><Link to={user?.role?.toLowerCase() === 'admin' ? '/admin' : '/user-dashboard'} className="nav-link">Dashboard</Link></li>
               <li><span className="user-greeting">Hi, {user?.name?.split(' ')[0]}</span></li>
               <li><button onClick={handleLogout} className="btn-logout">Logout</button></li>
             </>

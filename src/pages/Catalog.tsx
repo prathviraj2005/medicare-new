@@ -89,7 +89,7 @@ const Catalog: React.FC = () => {
         <div className="catalog-header">
           <h1>Medicine Catalog</h1>
           <p>Find the medicines you need with our comprehensive catalog</p>
-          {user?.role === 'Admin' && (
+          {user?.role?.toLowerCase() === 'admin' && (
             <button className="btn btn-primary" onClick={() => setShowAddForm(!showAddForm)}>
               {showAddForm ? 'Cancel' : '+ Add New Medicine'}
             </button>
@@ -177,7 +177,7 @@ const Catalog: React.FC = () => {
                 >
                   {medicine.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
                 </button>
-                {user?.role === 'Admin' && (
+                {user?.role?.toLowerCase() === 'admin' && (
                   <button
                     className="btn btn-danger"
                     onClick={() => removeMedicine(medicine.id)}

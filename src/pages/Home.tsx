@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { medicineAPI } from '../services/api';
 import './Home.css';
 import medicareBg from "../assests/medicare.png";
 
@@ -10,17 +11,23 @@ interface ContactInfo {
 }
 
 const Home: React.FC = () => {
-  const [contactInfo, setContactInfo] = useState<ContactInfo>({
+  const [contactInfo] = useState<ContactInfo>({
     phone: '+91 9876543210',
     email: 'support@medicare.com',
     address: 'Mumbai, Maharashtra, India'
   });
 
+  const [medicinesCount, setMedicinesCount] = useState(0);
   useEffect(() => {
-    const saved = localStorage.getItem('contactInfo');
-    if (saved) {
-      setContactInfo(JSON.parse(saved));
-    }
+    const fetchMedicines = async () => {
+      try {
+        const res = await medicineAPI.getAll();
+        setMedicinesCount(res.data.length);
+      } catch (error) {
+        console.error("Error fetching medicines count:", error);
+      }
+    };
+    fetchMedicines();
   }, []);
 
   const openChatbot = () => {
@@ -41,6 +48,7 @@ const Home: React.FC = () => {
               AI-powered online pharmacy with smart medicine recommendations and prescription management
             </p>
             <div className="hero-buttons">
+              <Link to="/catalog" className="btn btn-primary">Browse Medicines</Link>
               <Link to="/signup" className="btn btn-secondary">Get Started</Link>
             </div>
           </div>
@@ -49,6 +57,11 @@ const Home: React.FC = () => {
               <div className="card-icon">🏥</div>
               <h3>Trusted Service</h3>
               <p>Licensed pharmacists</p>
+            </div>
+            <div className="hero-card" onClick={() => window.location.href='/catalog'} style={{ cursor: 'pointer' }}>
+              <div className="card-icon">💊</div>
+              <h3>{medicinesCount}+ Medicines</h3>
+              <p>Wide range available</p>
             </div>
             <div className="hero-card">
               <div className="card-icon">🚚</div>

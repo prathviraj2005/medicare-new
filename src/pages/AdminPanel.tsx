@@ -329,7 +329,7 @@ const AdminPanel: React.FC = () => {
             Orders
           </button>
           <button className={activeTab === 'products' ? 'active' : ''} onClick={() => setActiveTab('products')}>
-            Products
+            Medicines
           </button>
           <button className={activeTab === 'blood' ? 'active' : ''} onClick={() => setActiveTab('blood')}>
             Blood Bank
@@ -345,19 +345,19 @@ const AdminPanel: React.FC = () => {
           <div className="dashboard">
             <h1>Dashboard</h1>
             <div className="stats-grid">
-              <div className="stat-card">
+              <div className="stat-card clickable-stat" onClick={() => setActiveTab('users')}>
                 <h3>Total Users</h3>
                 <p className="stat-number">{stats.totalUsers}</p>
               </div>
-              <div className="stat-card">
+              <div className="stat-card clickable-stat" onClick={() => setActiveTab('products')}>
                 <h3>Total Medicines</h3>
                 <p className="stat-number">{totalMedicines}</p>
               </div>
-              <div className="stat-card">
+              <div className="stat-card clickable-stat" onClick={() => setActiveTab('products')}>
                 <h3>Total Stock</h3>
                 <p className="stat-number">{totalStock}</p>
               </div>
-              <div className="stat-card">
+              <div className="stat-card clickable-stat" onClick={() => setActiveTab('orders')}>
                 <h3>Pending Orders</h3>
                 <p className="stat-number">{stats.pendingOrders}</p>
               </div>
