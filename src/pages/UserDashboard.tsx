@@ -26,6 +26,7 @@ const UserDashboard: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [medicines, setMedicines] = useState<any[]>([]);
   const [bloodRequests, setBloodRequests] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchData = React.useCallback(async () => {
     if (user) {
@@ -48,6 +49,8 @@ const UserDashboard: React.FC = () => {
         setBloodRequests(requestsRes);
       } catch (error) {
         console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
       }
     }
   }, [user]);
@@ -151,17 +154,28 @@ const UserDashboard: React.FC = () => {
           <div className="medicines-view">
             <h1>Book Medicines</h1>
             <p className="section-info">Browse and book medicines. Your orders will be reviewed by admin.</p>
-            <div className="medicines-list" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '20px', marginTop: '20px' }}>
-              {medicines.map(med => (
-                <div key={med.id} className="medicine-card" style={{ border: '1px solid #ddd', padding: '15px', borderRadius: '8px' }}>
-                  <h3>{med.name}</h3>
-                  <p><strong>Price:</strong> ₹{med.price}</p>
-                  <p><strong>Category:</strong> {med.category}</p>
-                  <p><strong>Description:</strong> {med.description}</p>
-                  <button onClick={() => handleBookMedicine(med)} className="btn btn-primary" style={{ marginTop: '10px', width: '100%' }}>Book Now</button>
-                </div>
-              ))}
-            </div>
+            {loading ? (
+              <div className="loading-state" style={{ textAlign: 'center', padding: '40px' }}>
+                <div className="spinner"></div>
+                <p>Loading medicines...</p>
+              </div>
+            ) : medicines.length > 0 ? (
+              <div className="medicines-list" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '20px', marginTop: '20px' }}>
+                {medicines.map(med => (
+                  <div key={med.id} className="medicine-card" style={{ border: '1px solid #ddd', padding: '15px', borderRadius: '8px' }}>
+                    <h3>{med.name}</h3>
+                    <p><strong>Price:</strong> ₹{med.price}</p>
+                    <p><strong>Category:</strong> {med.category}</p>
+                    <p><strong>Description:</strong> {med.description}</p>
+                    <button onClick={() => handleBookMedicine(med)} className="btn btn-primary" style={{ marginTop: '10px', width: '100%' }}>Book Now</button>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="no-results" style={{ textAlign: 'center', padding: '40px' }}>
+                <p>No medicines available at the moment.</p>
+              </div>
+            )}
           </div>
         )}
 

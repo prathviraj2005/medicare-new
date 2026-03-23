@@ -157,45 +157,50 @@ const Catalog: React.FC = () => {
           </div>
         </div>
 
-        <div className="medicines-grid">
-          {filteredMedicines.map(medicine => (
-            <div key={medicine.id} className="medicine-card">
-              <div className="medicine-info">
-                <h3>{medicine.name}</h3>
-                <p className="medicine-description">{medicine.description}</p>
-                <div className="medicine-details">
-                  <span className="category">{medicine.category}</span>
-                  <span className="stock">Stock: {medicine.stock}</span>
-                </div>
-                <div className="medicine-price">₹{medicine.price}</div>
-              </div>
-              <div className="medicine-actions">
-                <button
-                  className="btn btn-primary"
-                  onClick={() => handleAddToCart(medicine)}
-                  disabled={medicine.stock === 0}
-                >
-                  {medicine.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
-                </button>
-                {user?.role?.toLowerCase() === 'admin' && (
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => removeMedicine(medicine.id)}
-                  >
-                    Remove
-                  </button>
-                )}
-                {cartQuantities[medicine.id] && (
-                  <span className="cart-quantity">In cart: {cartQuantities[medicine.id]}</span>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {filteredMedicines.length === 0 && (
+        {loading ? (
+          <div className="loading-state">
+            <div className="spinner"></div>
+            <p>Loading medicines...</p>
+          </div>
+        ) : filteredMedicines.length === 0 ? (
           <div className="no-results">
             <p>No medicines found matching your criteria.</p>
+          </div>
+        ) : (
+          <div className="medicines-grid">
+            {filteredMedicines.map(medicine => (
+              <div key={medicine.id} className="medicine-card">
+                <div className="medicine-info">
+                  <h3>{medicine.name}</h3>
+                  <p className="medicine-description">{medicine.description}</p>
+                  <div className="medicine-details">
+                    <span className="category">{medicine.category}</span>
+                    <span className="stock">Stock: {medicine.stock}</span>
+                  </div>
+                  <div className="medicine-price">₹{medicine.price}</div>
+                </div>
+                <div className="medicine-actions">
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => handleAddToCart(medicine)}
+                    disabled={medicine.stock === 0}
+                  >
+                    {medicine.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                  </button>
+                  {user?.role?.toLowerCase() === 'admin' && (
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => removeMedicine(medicine.id)}
+                    >
+                      Remove
+                    </button>
+                  )}
+                  {cartQuantities[medicine.id] && (
+                    <span className="cart-quantity">In cart: {cartQuantities[medicine.id]}</span>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
