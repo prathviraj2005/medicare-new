@@ -103,6 +103,7 @@ const AdminPanel: React.FC = () => {
   const [bloodDonors, setBloodDonors] = useState<BloodDonor[]>([]);
   const [bloodRequests, setBloodRequests] = useState<BloodRequest[]>([]);
   const [bloodInventory, setBloodInventory] = useState<any[]>([]);
+  const [isLoadingBlood, setIsLoadingBlood] = useState(false);
 
   useEffect(() => {
     if (activeTab === 'blood') {
@@ -111,12 +112,15 @@ const AdminPanel: React.FC = () => {
   }, [activeTab]);
 
   const fetchBloodBankData = async () => {
+    setIsLoadingBlood(true);
     try {
-      const donors = await getDonors();
-      const requests = await getRequests();
-      const inventory = await getBloodInventory();
+      const [donors, requests, inventory] = await Promise.all([
+        getDonors(),
+        getRequests(),
+        getBloodInventory()
+      ]);
 
-      const formattedDonors = donors.map((d: any) => ({
+      const formattedDonors = (donors || []).map((d: any) => ({
         id: d.id,
         name: d.name,
         email: d.email,
@@ -124,17 +128,17 @@ const AdminPanel: React.FC = () => {
         bloodGroup: d.blood_group,
         age: d.age,
         weight: d.weight,
-        registeredDate: new Date(d.created_at).toLocaleDateString(),
+        registeredDate: d.created_at ? new Date(d.created_at).toLocaleDateString() : 'N/A',
         status: d.status
       }));
 
-      const formattedRequests = requests.map((r: any) => ({
+      const formattedRequests = (requests || []).map((r: any) => ({
         id: r.id,
         patient: r.patient_name,
         bloodType: r.blood_group,
         units: r.units_needed,
         status: r.status,
-        date: new Date(r.created_at).toLocaleDateString(),
+        date: r.created_at ? new Date(r.created_at).toLocaleDateString() : 'N/A',
         hospital: r.hospital_name,
         contactPhone: r.contact_phone,
         urgency: r.urgency
@@ -142,9 +146,11 @@ const AdminPanel: React.FC = () => {
 
       setBloodDonors(formattedDonors);
       setBloodRequests(formattedRequests);
-      setBloodInventory(inventory);
+      setBloodInventory(inventory || []);
     } catch (error) {
       console.error("Error fetching blood bank data:", error);
+    } finally {
+      setIsLoadingBlood(false);
     }
   };
 
@@ -598,16 +604,24 @@ const AdminPanel: React.FC = () => {
         {activeTab === 'blood' && (
           <div className="blood-section">
             <h1>Blood Bank Management</h1>
-            <div className="blood-stats">
-              {bloodInventory.length > 0 ? bloodInventory.map((item: any) => (
-                <div key={item.blood_group} className="blood-card">
-                  <h3>{item.blood_group}</h3>
-                  <p>{item.units} Units</p>
-                </div>
-              )) : (
+            {isLoadingBlood ? (
+              <div className="loading-state">
                 <p>Loading inventory...</p>
-              )}
-            </div>
+              </div>
+            ) : bloodInventory.length > 0 ? (
+              <div className="blood-stats">
+                {bloodInventory.map((item: any) => (
+                  <div key={item.blood_group} className="blood-card">
+                    <h3>{item.blood_group}</h3>
+                    <p>{item.units} Units</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="no-data">
+                <p>No blood inventory found.</p>
+              </div>
+            )}
 
             <h2>Blood Donor Registrations</h2>
             {bloodDonors.length > 0 ? (

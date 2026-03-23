@@ -299,8 +299,10 @@ const BloodBank: React.FC = () => {
               </div>
 
               {loading ? (
-                <p>Loading inventory...</p>
-              ) : (
+                <div className="loading-state">
+                  <p>Loading inventory...</p>
+                </div>
+              ) : inventory.length > 0 ? (
                 <div className="inventory-grid">
                   {inventory.map(item => (
                     <div key={item.blood_group} className="inventory-card">
@@ -309,12 +311,16 @@ const BloodBank: React.FC = () => {
                         <span className="units">{item.units}</span>
                         <span className="label">Units Available</span>
                       </div>
-                      <div className="expiry">Last Updated: {new Date(item.last_updated).toLocaleDateString()}</div>
+                      <div className="expiry">Last Updated: {item.last_updated ? new Date(item.last_updated).toLocaleDateString() : 'N/A'}</div>
                       <div className={`status ${item.units > 15 ? 'good' : item.units > 5 ? 'low' : 'critical'}`}>
                         {item.units > 15 ? 'Good Stock' : item.units > 5 ? 'Low Stock' : 'Critical'}
                       </div>
                     </div>
                   ))}
+                </div>
+              ) : (
+                <div className="no-data">
+                  <p>Currently no blood inventory data available.</p>
                 </div>
               )}
 
