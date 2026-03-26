@@ -201,11 +201,11 @@ INSERT INTO medicines (name, price, description, category, stock) VALUES
 
 -- Insert sample users
 INSERT INTO users (name, email, password, role, status) VALUES
-('Arun Jadhav', 'arun@example.com', 'hashed_password_123', 'User', 'Active'),
-('Pooja Jadhav', 'pj@example.com', 'hashed_password_456', 'User', 'Active'),
-('Admin User', 'admin@example.com', 'hashed_admin_password', 'Admin', 'Active'),
-('Sagar Kumar', 'sk@example.com', 'hashed_password_789', 'User', 'Active'),
-('Prajwal more', 'pj@example.com', 'hashed_password_321', 'User', 'Active');
+('Arun Jadhav', 'arun@example.com', 'password123', 'Admin', 'Active'),
+('Pooja Jadhav', 'pj@example.com', 'password123', 'User', 'Active'),
+('Admin User', 'admin@example.com', 'admin123', 'Admin', 'Active'),
+('Sagar Kumar', 'sk@example.com', 'password123', 'User', 'Active'),
+('Prajwal more', 'prajwal@example.com', 'password123', 'User', 'Active');
 
 -- Insert sample orders
 INSERT INTO orders (user_id, total_amount, status) VALUES
