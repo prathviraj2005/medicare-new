@@ -67,21 +67,21 @@ export const orderAPI = {
 export const bloodBankAPI = {
   // Donor APIs
   registerDonor: (donorData: Omit<BloodDonor, 'id'>) =>
-    api.post<BloodDonor>('/blood-bank/donors', donorData),
-  getDonors: () => api.get<BloodDonor[]>('/blood-bank/donors'),
-  getDonorById: (id: number) => api.get<BloodDonor>(`/blood-bank/donors/${id}`),
+    api.post<BloodDonor>('/bloodbank/donate', donorData),
+  getDonors: () => api.get<BloodDonor[]>('/bloodbank/donors'),
+  getDonorById: (id: number) => api.get<BloodDonor>(`/bloodbank/donors/${id}`),
 
   // Blood Request APIs
   createBloodRequest: (requestData: Omit<BloodRequest, 'id'>) =>
-    api.post<BloodRequest>('/blood-bank/requests', requestData),
-  getBloodRequests: () => api.get<BloodRequest[]>('/blood-bank/requests'),
+    api.post<BloodRequest>('/bloodbank/request', requestData),
+  getBloodRequests: () => api.get<BloodRequest[]>('/bloodbank/requests'),
   updateRequestStatus: (id: number, status: string) =>
-    api.put(`/blood-bank/requests/${id}/status`, { status }),
+    api.put(`/bloodbank/requests/${id}/status`, { status }),
 
   // Inventory APIs
-  getInventory: () => api.get('/blood-bank/inventory'),
+  getInventory: () => api.get('/bloodbank/inventory'),
   updateInventory: (bloodGroup: string, units: number) =>
-    api.put('/blood-bank/inventory', { bloodGroup, units }),
+    api.put('/bloodbank/inventory', { bloodGroup, units }),
 };
 
 // Chatbot API

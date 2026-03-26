@@ -75,7 +75,7 @@ const Orders: React.FC = () => {
                 <div className="order-header">
                   <div className="order-info">
                     <h3>Order #{order.id}</h3>
-                    <p>Placed on {new Date(order.createdAt || Date.now()).toLocaleDateString()}</p>
+                    <p>Placed on {new Date(order.created_at || Date.now()).toLocaleDateString()}</p>
                   </div>
                   <div className="order-status">
                     <span
@@ -101,7 +101,7 @@ const Orders: React.FC = () => {
 
                 <div className="order-footer">
                   <div className="order-total">
-                    <strong>Total: ₹{order.total}</strong>
+                    <strong>Total: ₹{order.total_amount}</strong>
                   </div>
                   <div className="order-actions">
                     {order.status === 'delivered' && (

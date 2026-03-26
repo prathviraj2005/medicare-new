@@ -29,10 +29,13 @@ export interface User {
 export interface Order {
   id: number;
   userId: number;
+  user_id?: number;
   items: CartItem[];
   total: number;
+  total_amount?: number;
   status: string;
   createdAt: string;
+  created_at?: string;
 }
 
 export interface BloodDonor {

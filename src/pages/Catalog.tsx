@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Medicine } from '../types';
 import { medicineAPI } from '../services/api';
-import { useCart } from '../context/CartContext';
+import { orderAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import './Catalog.css';
 
@@ -11,16 +11,7 @@ const Catalog: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
-  const { addToCart, cartItems } = useCart();
-  const { user } = useAuth(); // If we want to show admin features conditionally
-
-  // Calculate cart quantities map for UI
-  const cartQuantities = cartItems.reduce((acc, item) => {
-    // Handle both potential item structures
-    const id = item.id || (item.medicine ? item.medicine.id : 0);
-    acc[id] = item.quantity;
-    return acc;
-  }, {} as { [key: number]: number });
+  const { user, isAuthenticated } = useAuth();
 
   const [showAddForm, setShowAddForm] = useState(false);
   const [newMedicine, setNewMedicine] = useState({
@@ -53,8 +44,25 @@ const Catalog: React.FC = () => {
     return matchesSearch && matchesCategory;
   });
 
-  const handleAddToCart = (medicine: Medicine) => {
-    addToCart(medicine);
+  const handleBookNow = async (medicine: Medicine) => {
+    if (!isAuthenticated) {
+      alert("Please login to book medicines");
+      return;
+    }
+
+    if (window.confirm(`Do you want to book ${medicine.name} for ₹${medicine.price}?`)) {
+      try {
+        await orderAPI.createOrder({
+          userId: user?.id,
+          items: [{ medicineId: medicine.id, quantity: 1, price: medicine.price }],
+          totalAmount: medicine.price
+        });
+        alert('Medicine booked successfully!');
+      } catch (error) {
+        console.error("Booking error:", error);
+        alert('Failed to book medicine');
+      }
+    }
   };
 
   const removeMedicine = async (id: number) => {
@@ -182,10 +190,10 @@ const Catalog: React.FC = () => {
                 <div className="medicine-actions">
                   <button
                     className="btn btn-primary"
-                    onClick={() => handleAddToCart(medicine)}
+                    onClick={() => handleBookNow(medicine)}
                     disabled={medicine.stock === 0}
                   >
-                    {medicine.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                    {medicine.stock === 0 ? 'Out of Stock' : 'Book Now'}
                   </button>
                   {user?.role?.toLowerCase() === 'admin' && (
                     <button
@@ -195,9 +203,7 @@ const Catalog: React.FC = () => {
                       Remove
                     </button>
                   )}
-                  {cartQuantities[medicine.id] && (
-                    <span className="cart-quantity">In cart: {cartQuantities[medicine.id]}</span>
-                  )}
+
                 </div>
               </div>
             ))}

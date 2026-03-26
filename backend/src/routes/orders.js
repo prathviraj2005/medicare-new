@@ -9,7 +9,29 @@ router.get('/', async (req, res) => {
       SELECT o.*, u.name as user_name, u.email as user_email 
       FROM orders o 
       LEFT JOIN users u ON o.user_id = u.id
+      ORDER BY o.created_at DESC
     `);
+    
+    // Fetch items for each order
+    for (const order of orders) {
+      const [items] = await db.query(`
+        SELECT oi.*, m.name as medicine_name, m.category, m.price as medicine_price
+        FROM order_items oi
+        JOIN medicines m ON oi.medicine_id = m.id
+        WHERE oi.order_id = ?
+      `, [order.id]);
+      
+      order.items = items.map(item => ({
+        ...item,
+        medicine: {
+          id: item.medicine_id,
+          name: item.medicine_name,
+          category: item.category,
+          price: item.medicine_price
+        }
+      }));
+    }
+    
     res.json(orders || []);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -24,7 +46,29 @@ router.get('/user/:userId', async (req, res) => {
       FROM orders o 
       LEFT JOIN users u ON o.user_id = u.id
       WHERE o.user_id = ?
+      ORDER BY o.created_at DESC
     `, [req.params.userId]);
+    
+    // Fetch items for each order
+    for (const order of orders) {
+      const [items] = await db.query(`
+        SELECT oi.*, m.name as medicine_name, m.category, m.price as medicine_price
+        FROM order_items oi
+        JOIN medicines m ON oi.medicine_id = m.id
+        WHERE oi.order_id = ?
+      `, [order.id]);
+      
+      order.items = items.map(item => ({
+        ...item,
+        medicine: {
+          id: item.medicine_id,
+          name: item.medicine_name,
+          category: item.category,
+          price: item.medicine_price
+        }
+      }));
+    }
+    
     res.json(orders || []);
   } catch (error) {
     res.status(500).json({ message: error.message });
