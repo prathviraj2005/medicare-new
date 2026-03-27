@@ -13,26 +13,24 @@ import Chatbot from './components/Chatbot';
 import { AuthProvider } from './context/AuthContext';
 import './App.css';
 
-
-
 function App() {
   return (
     <Router>
       <AuthProvider>
         <div className="App">
-            <Navbar />
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/catalog" element={<Catalog />} />
-
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/blood-bank" element={<BloodBank />} />
-              <Route path="/orders" element={<Orders />} />
-              <Route path="/admin" element={<AdminPanel />} />
-              <Route path="/user-dashboard" element={<UserDashboard />} />
-            </Routes>
-          </div>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/catalog" element={<Catalog />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/blood-bank" element={<BloodBank />} />
+            <Route path="/orders" element={<Orders />} />
+            <Route path="/admin" element={<AdminPanel />} />
+            <Route path="/user-dashboard" element={<UserDashboard />} />
+          </Routes>
+          <Chatbot />
+        </div>
       </AuthProvider>
     </Router>
   );

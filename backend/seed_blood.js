@@ -1,3 +1,5 @@
+
+
 const db = require('./src/config/database');
 async function seed() {
     try {
